@@ -22,7 +22,7 @@ RUN apt-get install -y oozie-client
 
 # declare the volumes
 RUN mkdir /etc/hadoop/conf.bb && \
-    update-alternatives --install /etc/hadoop/conf hue-conf /etc/hadoop/conf.bb 1 && \
+    update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.bb 1 && \
     update-alternatives --set hadoop-conf /etc/hadoop/conf.bb
 VOLUME /etc/hadoop/conf.bb
 
