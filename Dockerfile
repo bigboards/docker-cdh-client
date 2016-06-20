@@ -27,7 +27,7 @@ RUN mkdir /etc/hadoop/conf.bb && \
 VOLUME /etc/hadoop/conf.bb
 
 # external ports
-EXPOSE 57575
+EXPOSE 58585
 
 
-CMD ["butterfly.server.py", "--unsecure", "--host=0.0.0.0", "--port=57575"]
+CMD ["butterfly.server.py", "--unsecure", "--host=0.0.0.0", "--port=58585"]
