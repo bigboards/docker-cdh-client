@@ -1,24 +1,17 @@
 # Pull base image.
-#FROM bigboards/cdh-base-__arch__
-FROM bigboards/cdh-base-x86_64
+FROM bigboards/cdh-base-__arch__
 
 MAINTAINER bigboards
 USER root 
 
 # Install hadoop-client
-RUN apt-get update && apt-get install -y hadoop-client libssl-dev libffi-dev python-dev python-pip
+RUN apt-get update \
+    && apt-get install -y hadoop-client libssl-dev libffi-dev python-dev python-pip spark-core spark-history-server spark-python pig oozie-client \
+    && pip install butterfly && pip install libsass \
+    && apt-get clean \
+    && apt-get autoclean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
 
-# Install Butterfly
-RUN pip install butterfly && pip install libsass 
-
-# Install Spark
-RUN apt-get install -y spark-core spark-history-server spark-python
-
-# Install Pig
-RUN apt-get install -y pig
-
-# Install Oozie
-RUN apt-get install -y oozie-client
 
 # declare the volumes
 RUN mkdir /etc/hadoop/conf.bb && \
