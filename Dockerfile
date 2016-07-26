@@ -2,16 +2,20 @@
 FROM bigboards/cdh-base-__arch__
 
 MAINTAINER bigboards
-USER root 
+USER root
+
+ENV NOTVISIBLE "in users profile"
 
 # Install hadoop-client
 RUN apt-get update \
-    && apt-get install -y hadoop-client libssl-dev libffi-dev python-dev python-pip spark-core spark-history-server spark-python pig oozie-client \
-    && pip install butterfly && pip install libsass \
+    && apt-get install -y hadoop-client libssl-dev libffi-dev python-dev python-pip spark-core spark-history-server spark-python pig oozie-client openssh-server \
     && apt-get clean \
     && apt-get autoclean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/*
-
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/* \
+    && mkdir /var/run/sshd \
+    && sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
+    && echo "export VISIBLE=now" >> /etc/profile
 
 # declare the volumes
 RUN mkdir /etc/hadoop/conf.bb && \
@@ -20,7 +24,6 @@ RUN mkdir /etc/hadoop/conf.bb && \
 VOLUME /etc/hadoop/conf.bb
 
 # external ports
-EXPOSE 58585
+EXPOSE 22
 
-
-CMD ["butterfly.server.py", "--unsecure", "--host=0.0.0.0", "--port=58585"]
+CMD ["/usr/sbin/sshd", "-D"]
