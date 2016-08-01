@@ -14,6 +14,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/apt/archives/* \
     && mkdir /var/run/sshd \
     && sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config \
+    && sed -i 's/Port 22/Port 2222/' /etc/ssh/sshd_config \
     && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
     && echo "export VISIBLE=now" >> /etc/profile
 
@@ -24,6 +25,6 @@ RUN mkdir /etc/hadoop/conf.bb && \
 VOLUME /etc/hadoop/conf.bb
 
 # external ports
-EXPOSE 22
+EXPOSE 2222
 
 CMD ["/usr/sbin/sshd", "-D"]
